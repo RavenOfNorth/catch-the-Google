@@ -115,10 +115,9 @@ export function getGooglePosition() {
 
 // setter/command/mutation/side-effect
 export function playAgain() {
-    _state.gameStatus = GAME_STATUSES.IN_PROGRESS;
+    _state.gameStatus = GAME_STATUSES.SETTINGS;
     _state.points.catch = 0;
     _state.points.miss = 0;
-    _play();
     _observer();
 }   
 

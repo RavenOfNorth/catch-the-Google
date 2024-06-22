@@ -31,7 +31,5 @@ export function GridComponent() {
         element.append(rowElement);
     }
 
-    element.append(`Grid will be here`)
-
     return element;
 }

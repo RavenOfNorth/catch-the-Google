@@ -8,7 +8,8 @@ import {SettingsComponent} from "./Settings/Settings.component.js";
 import {playGameButtonComponent} from "./Settings/PlayGameButton/PlayGameButton.component.js";
 
 export function AppComponent() {
-    const element = document.createElement('div')
+    const element = document.createElement('section');
+    element.classList.add('container');
 
     const status = getGameStatus();
 
@@ -24,11 +25,20 @@ export function AppComponent() {
             element.append(loseElement);
         },
         [GAME_STATUSES.SETTINGS]: () => {
+            const mainElement = document.createElement("div");
+            mainElement.classList.add('main-elements');
+
             const button = playGameButtonComponent()
+
+            mainElement.append(
+                button
+            )
+
             const SettingsElement = SettingsComponent();
+
             element.append(
                 SettingsElement,
-                button
+                mainElement,
             )
         },
         [GAME_STATUSES.WIN]: () => {

@@ -1,25 +1,15 @@
-import {getPoints, playAgain} from "../../data/state-manager.js";
+import {DecorationComponent} from "./Decoration/Decoration.component.js";
+import {ModalElements} from "./Elements/Elements.component.js";
 
 export function WinComponent() {
     const element = document.createElement('div')
+    element.classList.add('modal');
 
-    const points = getPoints()
+    element.append(
+        DecorationComponent(),
+        ModalElements(),
 
-    const titleElement = document.createElement('h1')
-    titleElement.append('you win');
-
-    element.append(titleElement);
-
-    element.append(`catch: ${points.catch}; miss: ${points.miss}`)
-
-    const playAgainButtonElement = document.createElement('button')
-    playAgainButtonElement.classList.add('button');
-    playAgainButtonElement.append('Play again');
-    playAgainButtonElement.addEventListener('click', () => {
-        playAgain();
-    });
-
-    element.append(playAgainButtonElement)
+    );
 
     return element;
 }
