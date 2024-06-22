@@ -4,6 +4,8 @@ import { LoseComponent } from "./Lose/Lose.component.js";
 import { GridComponent } from "./Grid/Grid.component.js";
 import { ResultPanelComponent } from "./ResultPanel/ResultPanel.component.js";
 import {WinComponent} from "./Win/Win.component.js";
+import {SettingsComponent} from "./Settings/Settings.component.js";
+import {playGameButtonComponent} from "./Settings/PlayGameButton/PlayGameButton.component.js";
 
 export function AppComponent() {
     const element = document.createElement('div')
@@ -21,7 +23,14 @@ export function AppComponent() {
             const loseElement = LoseComponent();
             element.append(loseElement);
         },
-        [GAME_STATUSES.SETTINGS]: () => {console.warn('NOT IMPLEMENTED YET')},
+        [GAME_STATUSES.SETTINGS]: () => {
+            const button = playGameButtonComponent()
+            const SettingsElement = SettingsComponent();
+            element.append(
+                SettingsElement,
+                button
+            )
+        },
         [GAME_STATUSES.WIN]: () => {
             const WinElement = WinComponent();
             element.append(WinElement);

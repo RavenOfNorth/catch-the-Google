@@ -1,19 +1,19 @@
-import { GAME_STATUSES } from "./constants.js";
+import {GAME_STATUSES, SETTINGS} from "./constants.js";
 
 // todo: change points structure
 const _state = {
-  gameStatus: GAME_STATUSES.IN_PROGRESS, 
+  gameStatus: GAME_STATUSES.SETTINGS,
   points: {
     miss: 0,
     catch: 0,
   },
   settings: {
-        pointsToLose: 5,
-        pointsToWin: 5, 
+        pointsToLose: 20,
+        pointsToWin: 20,
         gridSize: {
-            width: 3,
-            height: 2 
-        } 
+            width: 4,
+            height: 4,
+        }
   },
   googlePosition: {
     x: 0, y: 0
@@ -60,7 +60,7 @@ function _play() {
     }, 3000);
 }
 
-_play();
+// _play();
 
 // getter/selector/query/CQS/mapper
 export function getPoints() {
@@ -79,6 +79,31 @@ export function getGridSize() {
         height:  _state.settings.gridSize.height,
         width: _state.settings.gridSize.width
     }
+}
+
+export function initializeSettings() {
+    if (_state.gameStatus === GAME_STATUSES.SETTINGS) {
+        const gridSizeSelect = document.getElementById("01").value;
+        const pointsToWinSelect = document.getElementById("02").value;
+        const pointsToLoseSelect = document.getElementById("03").value;
+
+        _state.settings.gridSize.width = SETTINGS.GRIDSIZE[gridSizeSelect].cols;
+        _state.settings.gridSize.height = SETTINGS.GRIDSIZE[gridSizeSelect].rows;
+        _state.settings.pointsToWin = SETTINGS.POINTTOWIN[pointsToWinSelect];
+        _state.settings.pointsToLose = SETTINGS.POINTTOLOSE[pointsToLoseSelect];
+    } else {
+        return
+    }
+
+}
+
+export function startGame() {
+    initializeSettings();
+    _state.gameStatus = GAME_STATUSES.IN_PROGRESS;
+    _state.points.catch = 0;
+    _state.points.miss = 0;
+    _play();
+    _observer();
 }
 
 export function getGooglePosition() {

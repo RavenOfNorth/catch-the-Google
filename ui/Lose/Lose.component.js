@@ -12,7 +12,8 @@ export function LoseComponent() {
 
     element.append(`catch: ${points.catch}; miss: ${points.miss}`)
 
-    const playAgainButtonElement = document.createElement('button')
+    const playAgainButtonElement = document.createElement('button');
+    playAgainButtonElement.classList.add('button');
     playAgainButtonElement.append('Play again');
     playAgainButtonElement.addEventListener('click', () => {
         playAgain();
