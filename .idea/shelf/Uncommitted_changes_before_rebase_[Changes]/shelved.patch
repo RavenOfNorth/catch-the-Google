@@ -1,0 +1,500 @@
+Index: ui/App.component.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import { GAME_STATUSES } from \"../data/constants.js\";\r\nimport { getGameStatus } from \"../data/state-manager.js\";\r\nimport { LoseComponent } from \"./Lose/Lose.component.js\";\r\nimport { GridComponent } from \"./Grid/Grid.component.js\";\r\nimport { ResultPanelComponent } from \"./ResultPanel/ResultPanel.component.js\";\r\nimport {WinComponent} from \"./Win/Win.component.js\";\r\nimport {SettingsComponent} from \"./Settings/Settings.component.js\";\r\nimport {playGameButtonComponent} from \"./Settings/PlayGameButton/PlayGameButton.component.js\";\r\n\r\nexport function AppComponent() {\r\n    const element = document.createElement('div')\r\n\r\n    const status = getGameStatus();\r\n\r\n    const transitions = {\r\n        [GAME_STATUSES.IN_PROGRESS]: () => {\r\n            const resultPanelElement = ResultPanelComponent();\r\n            element.append(resultPanelElement);\r\n            const gridElement = GridComponent();\r\n            element.append(gridElement);\r\n        },\r\n        [GAME_STATUSES.LOSE]: () => {\r\n            const loseElement = LoseComponent();\r\n            element.append(loseElement);\r\n        },\r\n        [GAME_STATUSES.SETTINGS]: () => {\r\n            const button = playGameButtonComponent()\r\n            const SettingsElement = SettingsComponent();\r\n            element.append(\r\n                SettingsElement,\r\n                button\r\n            )\r\n        },\r\n        [GAME_STATUSES.WIN]: () => {\r\n            const WinElement = WinComponent();\r\n            element.append(WinElement);\r\n        },\r\n    }\r\n\r\n    transitions[status]();\r\n    \r\n    return element;\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ui/App.component.js b/ui/App.component.js
+--- a/ui/App.component.js	(revision c280ef28ccc28500d7f3cedafac15a27b789b5b2)
++++ b/ui/App.component.js	(date 1719083140257)
+@@ -8,7 +8,8 @@
+ import {playGameButtonComponent} from "./Settings/PlayGameButton/PlayGameButton.component.js";
+ 
+ export function AppComponent() {
+-    const element = document.createElement('div')
++    const element = document.createElement('section');
++    element.classList.add('container');
+ 
+     const status = getGameStatus();
+ 
+@@ -24,11 +25,20 @@
+             element.append(loseElement);
+         },
+         [GAME_STATUSES.SETTINGS]: () => {
++            const mainElement = document.createElement("div");
++            mainElement.classList.add('main-elements');
++
+             const button = playGameButtonComponent()
++
++            mainElement.append(
++                button
++            )
++
+             const SettingsElement = SettingsComponent();
++
+             element.append(
+                 SettingsElement,
+-                button
++                mainElement,
+             )
+         },
+         [GAME_STATUSES.WIN]: () => {
+Index: ui/Settings/PlayGameButton/PlayGameButton.component.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import {initializeSettings, startGame} from \"../../../data/state-manager.js\";\r\n\r\n\r\nexport function playGameButtonComponent() {\r\n    const element = document.createElement(\"button\");\r\n    element.classList.add(\"button\");\r\n    element.classList.add(\"main-button\");\r\n\r\n    const TextElement = document.createElement(\"h1\")\r\n    TextElement.append('START GAME');\r\n\r\n    element.append(TextElement)\r\n\r\n    element.addEventListener(\"click\", () => {\r\n        startGame()\r\n    })\r\n\r\n    return element\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ui/Settings/PlayGameButton/PlayGameButton.component.js b/ui/Settings/PlayGameButton/PlayGameButton.component.js
+--- a/ui/Settings/PlayGameButton/PlayGameButton.component.js	(revision c280ef28ccc28500d7f3cedafac15a27b789b5b2)
++++ b/ui/Settings/PlayGameButton/PlayGameButton.component.js	(date 1719091755724)
+@@ -1,4 +1,4 @@
+-import {initializeSettings, startGame} from "../../../data/state-manager.js";
++import {startGame} from "../../../data/state-manager.js";
+ 
+ 
+ export function playGameButtonComponent() {
+Index: ui/Win/Win.component.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import {getPoints, playAgain} from \"../../data/state-manager.js\";\r\n\r\nexport function WinComponent() {\r\n    const element = document.createElement('div')\r\n\r\n    const points = getPoints()\r\n\r\n    const titleElement = document.createElement('h1')\r\n    titleElement.append('you win');\r\n\r\n    element.append(titleElement);\r\n\r\n    element.append(`catch: ${points.catch}; miss: ${points.miss}`)\r\n\r\n    const playAgainButtonElement = document.createElement('button')\r\n    playAgainButtonElement.classList.add('button');\r\n    playAgainButtonElement.append('Play again');\r\n    playAgainButtonElement.addEventListener('click', () => {\r\n        playAgain();\r\n    });\r\n\r\n    element.append(playAgainButtonElement)\r\n\r\n    return element;\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ui/Win/Win.component.js b/ui/Win/Win.component.js
+--- a/ui/Win/Win.component.js	(revision c280ef28ccc28500d7f3cedafac15a27b789b5b2)
++++ b/ui/Win/Win.component.js	(date 1719091116251)
+@@ -1,25 +1,15 @@
+-import {getPoints, playAgain} from "../../data/state-manager.js";
++import {DecorationComponent} from "./Decoration/Decoration.component.js";
++import {ModalElements} from "./Elements/Elements.component.js";
+ 
+ export function WinComponent() {
+     const element = document.createElement('div')
+-
+-    const points = getPoints()
+-
+-    const titleElement = document.createElement('h1')
+-    titleElement.append('you win');
+-
+-    element.append(titleElement);
++    element.classList.add('modal');
+ 
+-    element.append(`catch: ${points.catch}; miss: ${points.miss}`)
++    element.append(
++        DecorationComponent(),
++        ModalElements(),
+ 
+-    const playAgainButtonElement = document.createElement('button')
+-    playAgainButtonElement.classList.add('button');
+-    playAgainButtonElement.append('Play again');
+-    playAgainButtonElement.addEventListener('click', () => {
+-        playAgain();
+-    });
+-
+-    element.append(playAgainButtonElement)
++    );
+ 
+     return element;
+ }
+\ No newline at end of file
+Index: data/state-manager.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import {GAME_STATUSES, SETTINGS} from \"./constants.js\";\r\n\r\n// todo: change points structure\r\nconst _state = {\r\n  gameStatus: GAME_STATUSES.SETTINGS,\r\n  points: {\r\n    miss: 0,\r\n    catch: 0,\r\n  },\r\n  settings: {\r\n        pointsToLose: 20,\r\n        pointsToWin: 20,\r\n        gridSize: {\r\n            width: 4,\r\n            height: 4,\r\n        }\r\n  },\r\n  googlePosition: {\r\n    x: 0, y: 0\r\n  } \r\n};\r\n\r\n\r\nlet _observer = () => {}\r\n\r\nexport function subscribe(subscriberListenerObserverCallbackEventHandlerConsumer) {\r\n    _observer = subscriberListenerObserverCallbackEventHandlerConsumer\r\n}\r\n\r\nfunction _getRandomInt(max) {\r\n    return Math.floor(Math.random() * Math.floor(max));\r\n}\r\n\r\nfunction _moveGoogleToRandomPosition() {\r\n    const newX = _getRandomInt(_state.settings.gridSize.width);\r\n    const newY = _getRandomInt(_state.settings.gridSize.height);\r\n\r\n    if (newX === _state.googlePosition.x && newY === _state.googlePosition.y) {\r\n        _moveGoogleToRandomPosition()\r\n        return;\r\n    }\r\n\r\n    _state.googlePosition.x = newX;\r\n    _state.googlePosition.y = newY;\r\n}\r\nlet _intervalId;\r\n\r\nfunction _play() {\r\n    _intervalId = setInterval(() => {\r\n        _state.points.miss++;\r\n    \r\n        if (_state.points.miss === _state.settings.pointsToLose) {\r\n            clearInterval(_intervalId);\r\n            _state.gameStatus = GAME_STATUSES.LOSE;\r\n        } else {\r\n            _moveGoogleToRandomPosition();\r\n        }\r\n    \r\n        _observer();\r\n    }, 3000);\r\n}\r\n\r\n// _play();\r\n\r\n// getter/selector/query/CQS/mapper\r\nexport function getPoints() {\r\n    return {\r\n        miss: _state.points.miss,\r\n        catch: _state.points.catch\r\n    }\r\n}\r\n\r\nexport function getGameStatus() {\r\n    return _state.gameStatus\r\n}\r\n\r\nexport function getGridSize() {\r\n    return  {\r\n        height:  _state.settings.gridSize.height,\r\n        width: _state.settings.gridSize.width\r\n    }\r\n}\r\n\r\nexport function initializeSettings() {\r\n    if (_state.gameStatus === GAME_STATUSES.SETTINGS) {\r\n        const gridSizeSelect = document.getElementById(\"01\").value;\r\n        const pointsToWinSelect = document.getElementById(\"02\").value;\r\n        const pointsToLoseSelect = document.getElementById(\"03\").value;\r\n\r\n        _state.settings.gridSize.width = SETTINGS.GRIDSIZE[gridSizeSelect].cols;\r\n        _state.settings.gridSize.height = SETTINGS.GRIDSIZE[gridSizeSelect].rows;\r\n        _state.settings.pointsToWin = SETTINGS.POINTTOWIN[pointsToWinSelect];\r\n        _state.settings.pointsToLose = SETTINGS.POINTTOLOSE[pointsToLoseSelect];\r\n    } else {\r\n        return\r\n    }\r\n\r\n}\r\n\r\nexport function startGame() {\r\n    initializeSettings();\r\n    _state.gameStatus = GAME_STATUSES.IN_PROGRESS;\r\n    _state.points.catch = 0;\r\n    _state.points.miss = 0;\r\n    _play();\r\n    _observer();\r\n}\r\n\r\nexport function getGooglePosition() {\r\n    return  {\r\n        x:  _state.googlePosition.x,\r\n        y: _state.googlePosition.y\r\n    }\r\n}\r\n\r\n// setter/command/mutation/side-effect\r\nexport function playAgain() {\r\n    _state.gameStatus = GAME_STATUSES.IN_PROGRESS;\r\n    _state.points.catch = 0;\r\n    _state.points.miss = 0;\r\n    _play();\r\n    _observer();\r\n}   \r\n\r\nexport function catchGoogle() {\r\n    _state.points.catch++;\r\n    if (_state.points.catch === _state.settings.pointsToWin) {\r\n        clearInterval(_intervalId);\r\n        _state.gameStatus = GAME_STATUSES.WIN;\r\n    } else {\r\n        _moveGoogleToRandomPosition();\r\n        clearInterval(_intervalId);\r\n        _play();\r\n    }\r\n    _observer();\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/data/state-manager.js b/data/state-manager.js
+--- a/data/state-manager.js	(revision c280ef28ccc28500d7f3cedafac15a27b789b5b2)
++++ b/data/state-manager.js	(date 1719091911124)
+@@ -115,10 +115,9 @@
+ 
+ // setter/command/mutation/side-effect
+ export function playAgain() {
+-    _state.gameStatus = GAME_STATUSES.IN_PROGRESS;
++    _state.gameStatus = GAME_STATUSES.SETTINGS;
+     _state.points.catch = 0;
+     _state.points.miss = 0;
+-    _play();
+     _observer();
+ }   
+ 
+Index: ui/Win/Elements/Results/Catch/Result/ResultCatch.component.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ui/Win/Elements/Results/Catch/Result/ResultCatch.component.js b/ui/Win/Elements/Results/Catch/Result/ResultCatch.component.js
+new file mode 100644
+--- /dev/null	(date 1719087765029)
++++ b/ui/Win/Elements/Results/Catch/Result/ResultCatch.component.js	(date 1719087765029)
+@@ -0,0 +1,14 @@
++import {getPoints} from "../../../../../../data/state-manager.js";
++
++export function ResultCatchValueComponent() {
++    const element = document.createElement('span')
++    element.classList.add('result');
++
++    const points = getPoints();
++
++    element.append(
++    points.catch
++    )
++
++    return element;
++}
+\ No newline at end of file
+Index: ui/Win/Elements/Results/Catch/Catch.component.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ui/Win/Elements/Results/Catch/Catch.component.js b/ui/Win/Elements/Results/Catch/Catch.component.js
+new file mode 100644
+--- /dev/null	(date 1719087764943)
++++ b/ui/Win/Elements/Results/Catch/Catch.component.js	(date 1719087764943)
+@@ -0,0 +1,14 @@
++import {TitleCatchComponent} from "./Title/Title.component.js";
++import {ResultCatchValueComponent} from "./Result/ResultCatch.component.js";
++
++function CatchComponent() {
++    const element = document.createElement('div');
++    element.classList.add('result-block');
++
++    element.append(
++        TitleCatchComponent(),
++        ResultCatchValueComponent()
++    )
++
++    return element;
++}
+\ No newline at end of file
+Index: ui/Win/Elements/Results/Catch/Title/Title.component.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ui/Win/Elements/Results/Catch/Title/Title.component.js b/ui/Win/Elements/Results/Catch/Title/Title.component.js
+new file mode 100644
+--- /dev/null	(date 1719087764809)
++++ b/ui/Win/Elements/Results/Catch/Title/Title.component.js	(date 1719087764809)
+@@ -0,0 +1,8 @@
++export function TitleCatchComponent() {
++    const element = document.createElement('span')
++    element.classList.add('result-title');
++
++    element.append('Catch:')
++
++    return element;
++}
+\ No newline at end of file
+Index: ui/Grid/Grid.component.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import { catchGoogle, getGooglePosition, getGridSize } from \"../../data/state-manager.js\"\r\nimport {Google} from \"./GoogleElement/Google.component.js\";\r\n\r\nexport function GridComponent() {\r\n    const element = document.createElement('table');\r\n    element.classList.add('table')\r\n\r\n    const gridSize = getGridSize();\r\n    const googlePosition = getGooglePosition();\r\n\r\n    for (let y = 0; y < gridSize.height; y++) {\r\n        const rowElement = document.createElement('tr')\r\n\r\n        for (let x = 0; x < gridSize.width; x++) {\r\n            // todo: move to CellComponent\r\n            // const cellElement = CellComponent(x,y)\r\n            const cellElement = document.createElement('td');\r\n            cellElement.classList.add('cell')\r\n            \r\n            if (googlePosition.x === x && googlePosition.y === y) {\r\n                const googleElement = Google()\r\n                googleElement.addEventListener('click', () => {\r\n                    catchGoogle();\r\n                })\r\n\r\n               cellElement.append(googleElement)\r\n            }\r\n            rowElement.append(cellElement)\r\n        }\r\n\r\n        element.append(rowElement);\r\n    }\r\n\r\n    element.append(`Grid will be here`)\r\n\r\n    return element;\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ui/Grid/Grid.component.js b/ui/Grid/Grid.component.js
+--- a/ui/Grid/Grid.component.js	(revision c280ef28ccc28500d7f3cedafac15a27b789b5b2)
++++ b/ui/Grid/Grid.component.js	(date 1719082446572)
+@@ -31,7 +31,5 @@
+         element.append(rowElement);
+     }
+ 
+-    element.append(`Grid will be here`)
+-
+     return element;
+ }
+\ No newline at end of file
+Index: ui/Win/Elements/Results/Miss/Title/Title.component.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ui/Win/Elements/Results/Miss/Title/Title.component.js b/ui/Win/Elements/Results/Miss/Title/Title.component.js
+new file mode 100644
+--- /dev/null	(date 1719087764976)
++++ b/ui/Win/Elements/Results/Miss/Title/Title.component.js	(date 1719087764976)
+@@ -0,0 +1,8 @@
++export function TitleMissComponent() {
++    const element = document.createElement('span')
++    element.classList.add('result-title');
++
++    element.append('Miss:')
++
++    return element;
++}
+\ No newline at end of file
+Index: ui/Lose/Lose.component.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import { getPoints, playAgain } from \"../../data/state-manager.js\";\r\n\r\nexport function LoseComponent() {\r\n    const element = document.createElement('div')\r\n\r\n    const points = getPoints()\r\n\r\n    const titleElement = document.createElement('h1')\r\n    titleElement.append('you lose');\r\n    \r\n    element.append(titleElement);\r\n\r\n    element.append(`catch: ${points.catch}; miss: ${points.miss}`)\r\n\r\n    const playAgainButtonElement = document.createElement('button');\r\n    playAgainButtonElement.classList.add('button');\r\n    playAgainButtonElement.append('Play again');\r\n    playAgainButtonElement.addEventListener('click', () => {\r\n        playAgain();\r\n    });\r\n\r\n    element.append(playAgainButtonElement)\r\n\r\n    return element;\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ui/Lose/Lose.component.js b/ui/Lose/Lose.component.js
+--- a/ui/Lose/Lose.component.js	(revision c280ef28ccc28500d7f3cedafac15a27b789b5b2)
++++ b/ui/Lose/Lose.component.js	(date 1719091116223)
+@@ -1,25 +1,16 @@
+-import { getPoints, playAgain } from "../../data/state-manager.js";
++import {ModalDecorationComponent} from "./modalDecoration/modalDecoration.component.js";
++import {ModalElements} from "./modalElements/modalElements.component.js";
+ 
+ export function LoseComponent() {
+     const element = document.createElement('div')
+-
+-    const points = getPoints()
++    element.classList.add('modal');
+ 
+-    const titleElement = document.createElement('h1')
+-    titleElement.append('you lose');
+-    
+-    element.append(titleElement);
+ 
+-    element.append(`catch: ${points.catch}; miss: ${points.miss}`)
+ 
+-    const playAgainButtonElement = document.createElement('button');
+-    playAgainButtonElement.classList.add('button');
+-    playAgainButtonElement.append('Play again');
+-    playAgainButtonElement.addEventListener('click', () => {
+-        playAgain();
+-    });
++    element.append(
++        ModalDecorationComponent(),
++        ModalElements(),
++    )
+ 
+-    element.append(playAgainButtonElement)
+-
+     return element;
+ }
+\ No newline at end of file
+Index: ui/Win/Elements/Results/Miss/Result/ResultMiss.component.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ui/Win/Elements/Results/Miss/Result/ResultMiss.component.js b/ui/Win/Elements/Results/Miss/Result/ResultMiss.component.js
+new file mode 100644
+--- /dev/null	(date 1719087764833)
++++ b/ui/Win/Elements/Results/Miss/Result/ResultMiss.component.js	(date 1719087764833)
+@@ -0,0 +1,14 @@
++import {getPoints} from "../../../../../../data/state-manager.js";
++
++export function ResultMissValueComponent() {
++    const element = document.createElement('span')
++    element.classList.add('result');
++
++    const points = getPoints();
++
++    element.append(
++        points.miss
++    )
++
++    return element;
++}
+\ No newline at end of file
+Index: ui/Win/Elements/Results/Miss/Miss.component.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ui/Win/Elements/Results/Miss/Miss.component.js b/ui/Win/Elements/Results/Miss/Miss.component.js
+new file mode 100644
+--- /dev/null	(date 1719087765063)
++++ b/ui/Win/Elements/Results/Miss/Miss.component.js	(date 1719087765063)
+@@ -0,0 +1,14 @@
++import {TitleMissComponent} from "./Title/Title.component.js";
++import {ResultMissValueComponent} from "./Result/ResultMiss.component";
++
++function CatchComponent() {
++    const element = document.createElement('div');
++    element.classList.add('result-block');
++
++    element.append(
++        TitleMissComponent(),
++        ResultMissValueComponent()
++    )
++
++    return element;
++}
+\ No newline at end of file
+Index: css/style.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>@import \"null.css\";\r\n@import \"common.css\";\r\n@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');\r\n\r\n\r\n/* Page //======================================================================================================================================================== */\r\n\r\n.container {\r\n    margin: 0 auto;\r\n    max-width: 1182px;\r\n    padding: 0 15px;\r\n    height: 100vh;\r\n}\r\n\r\n.main-elements {\r\n    display: flex;\r\n    flex-direction: column;\r\n}\r\n\r\n.top-items {\r\n    display: flex;\r\n    gap: 12px;\r\n    padding-top: 24px;\r\n    flex-wrap: wrap;\r\n}\r\n\r\n.line {\r\n    display: flex;\r\n    flex-direction: column;\r\n    flex: 0 1 350px;\r\n}\r\n\r\nlabel {\r\n    color: #B6FDE5;\r\n    font-size: 14px;\r\n    font-weight: 400;\r\n    line-height: 24px;\r\n}\r\n\r\nselect {\r\n    height: 36px;\r\n    font-size: 16px;\r\n    background: #191A1C;\r\n    font-weight: 400;\r\n    line-height: 24px;\r\n    color: #FFF;\r\n    border-radius: 5px;\r\n    padding: 6px 12px;\r\n    cursor: pointer;\r\n}\r\n\r\n/* Toggle //======================================================================================================================================================== */\r\n\r\n.switch-button {\r\n    display: flex;\r\n    flex-direction: column;\r\n    gap: 8px;\r\n}\r\n\r\n.main-button {\r\n    align-self: center;\r\n    margin-top: 288px;\r\n}\r\n\r\n.toggle {\r\n    width: 36px;\r\n    height: 20px;\r\n    border: 1px solid #313A33;\r\n    background: #212720;\r\n    border-radius: 360px;\r\n    display: flex;\r\n    padding: 0 2px;\r\n    align-items: center;\r\n    justify-content: flex-start;\r\n    transition: all 0.3s ease 0s;\r\n}\r\n\r\n.toggle.on {\r\n    background: linear-gradient(90deg, #4AA32F 0%, #66DC42 100%);\r\n    border: 1px solid #75FA4C;\r\n    justify-content: flex-end;\r\n}\r\n\r\n.icon-slider {\r\n    width: 16px;\r\n    height: 16px;\r\n    background-color: #FDFDFD;\r\n    border-radius: 50%;\r\n    position: relative;\r\n    transition: all 0.3s ease 0s;\r\n}\r\n\r\n.icon-slider:after {\r\n    position: absolute;\r\n    content: '';\r\n    height: 14px;\r\n    width: 14px;\r\n    top: 50%;\r\n    left: 50%;\r\n    transform: translate(-50%, -50%);\r\n    background-image: url('../img/icons/soundOffIcon.svg');\r\n    background-size: cover;\r\n    background-repeat: no-repeat;\r\n    background-position: center center;\r\n}\r\n\r\n.toggle.on .icon-slider:after {\r\n    background-image: url('../img/icons/soundOnIcon.svg');\r\n}\r\n\r\n/* Toggle //======================================================================================================================================================== */\r\n\r\n\r\n/* Result //======================================================================================================================================================== */\r\n\r\n.result-container {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    padding: 12px 36px;\r\n    border-radius: 30px;\r\n    border: 1px solid #4C5E50;\r\n    background-color: rgba(57, 61, 55, 0.40);\r\n    margin: 36px auto;\r\n    max-width: 376px;\r\n    min-width: 376px;\r\n    column-gap: 30px;\r\n}\r\n\r\n.result-block {\r\n    display: inline-flex;\r\n    gap: 24px;\r\n    justify-content: space-between;\r\n}\r\n\r\n.result-title {\r\n    font-size: 18px;\r\n    font-weight: 400;\r\n}\r\n\r\n.result {\r\n    font-size: 24px;\r\n    font-weight: 500;\r\n}\r\n\r\n/* Table //======================================================================================================================================================== */\r\n\r\n.table {\r\n    margin: auto;\r\n    border-collapse: separate;\r\n    border-spacing: 12px 6px;\r\n    table-layout:fixed;\r\n    display: -ms-flexbox;\r\n    align-items: center;\r\n    justify-content: center;\r\n}\r\n\r\n/* Modal //======================================================================================================================================================== */\r\n\r\n.modal {\r\n    margin: 0 auto;\r\n    position: relative;\r\n    max-width: 280px;\r\n    max-height: 550px;\r\n}\r\n\r\n.modal-elements {\r\n    align-self: center;\r\n    position: relative;\r\n    padding: 71px 24px 36px;\r\n    width: 280px;\r\n    height: 407px;\r\n    text-align: center;\r\n    z-index: 10;\r\n}\r\n\r\n.modal-elements:before {\r\n    content: '';\r\n    position: absolute;\r\n    height: 100%;\r\n    width: 100%;\r\n    top: 0;\r\n    left: 0;\r\n    background-image: url('../img/icons/t-ShirtIcon.svg');\r\n    background-size: cover;\r\n    background-repeat: no-repeat;\r\n    background-position: center center;\r\n    z-index: -1;\r\n}\r\n\r\n.modal-decoration {\r\n    position: relative;\r\n    top: 53px;\r\n    left: 68px;\r\n    width: 144px;\r\n    height: 144px;\r\n    border: 2px solid #999B95;\r\n    background-color: rgba(110, 117, 102, 0.3);\r\n    border-radius: 50%;\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n}\r\n\r\n.title-modal {\r\n    font-size: 48px;\r\n    font-weight: 600;\r\n    line-height: 60px;\r\n    margin-bottom: 4px;\r\n}\r\n\r\n.text-modal {\r\n    font-size: 18px;\r\n    font-weight: 400;\r\n    line-height: 24px;\r\n    margin-bottom: 24px;\r\n}\r\n\r\n.modal-result {\r\n    margin-bottom: 68px;\r\n    display: flex;\r\n    flex-direction: column;\r\n    gap: 24px;\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/css/style.css b/css/style.css
+--- a/css/style.css	(revision c280ef28ccc28500d7f3cedafac15a27b789b5b2)
++++ b/css/style.css	(date 1719090229104)
+@@ -111,7 +111,7 @@
+ /* Toggle //======================================================================================================================================================== */
+ 
+ 
+-/* Result //======================================================================================================================================================== */
++/* Results //======================================================================================================================================================== */
+ 
+ .result-container {
+     display: flex;
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"c95fea79-73b1-4b27-9377-7c24a90e0339\" name=\"Changes\" comment=\"\">\r\n      <change afterPath=\"$PROJECT_DIR$/css/common.css\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/css/null.css\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/css/style.css\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/img/background.png\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/img/icons/googleIcon.svg\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/img/icons/lossIcon.svg\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/img/icons/man01.svg\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/img/icons/man02.svg\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/img/icons/soundOffIcon.svg\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/img/icons/soundOnIcon.svg\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/img/icons/t-ShirtIcon.svg\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/img/icons/winnerIcon.svg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/catch-the-google.iml\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/material_theme_project_new.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/material_theme_project_new.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/data/constants.js\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/data/constants.js\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/data/settings.js\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/data/settings.js\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/data/state-manager.js\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/data/state-manager.js\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/index.html\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/index.html\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/index.js\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/index.js\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/ui/App.component.js\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/ui/App.component.js\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/ui/Grid/Grid.component.js\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/ui/Grid/Grid.component.js\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/ui/Lose/Lose.component.js\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/ui/Lose/Lose.component.js\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/ui/ResultPanel/ResultPanel.component.js\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/ui/ResultPanel/ResultPanel.component.js\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/ui/Settings/settings.component.js\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/ui/Settings/Settings.component.js\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/ui/Win/Win.component.js\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/ui/Win/Win.component.js\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/ui/common/Buttons/playGame.button.js\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/ui/renderStartScreen.js\" beforeDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\"><![CDATA[{\r\n  \"lastFilter\": {\r\n    \"state\": \"OPEN\",\r\n    \"assignee\": \"RavenOfNorth\"\r\n  }\r\n}]]></component>\r\n  <component name=\"GithubPullRequestsUISettings\"><![CDATA[{\r\n  \"selectedUrlAndAccountId\": {\r\n    \"url\": \"https://github.com/RavenOfNorth/catch-the-Google\",\r\n    \"accountId\": \"73d1200f-19ca-4b8a-81f7-c9a5f5704850\"\r\n  }\r\n}]]></component>\r\n  <component name=\"ProjectColorInfo\"><![CDATA[{\r\n  \"customColor\": \"\",\r\n  \"associatedIndex\": 2\r\n}]]></component>\r\n  <component name=\"ProjectId\" id=\"2iFEoEUUIn2CM0UxlC1HppcN1yZ\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"git-widget-placeholder\": \"in-progress\",\r\n    \"node.js.detected.package.eslint\": \"true\",\r\n    \"node.js.detected.package.tslint\": \"true\",\r\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\r\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\r\n    \"nodejs_package_manager_path\": \"npm\",\r\n    \"vue.rearranger.settings.migration\": \"true\"\r\n  }\r\n}]]></component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-WS-241.17890.13\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"c95fea79-73b1-4b27-9377-7c24a90e0339\" name=\"Changes\" comment=\"\" />\r\n      <created>1719078103056</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1719078103056</updated>\r\n      <workItem from=\"1719078105796\" duration=\"3061000\" />\r\n    </task>\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision c280ef28ccc28500d7f3cedafac15a27b789b5b2)
++++ b/.idea/workspace.xml	(date 1719091756102)
+@@ -4,40 +4,35 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="c95fea79-73b1-4b27-9377-7c24a90e0339" name="Changes" comment="">
+-      <change afterPath="$PROJECT_DIR$/css/common.css" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/css/null.css" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/css/style.css" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/img/background.png" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/img/icons/googleIcon.svg" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/img/icons/lossIcon.svg" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/img/icons/man01.svg" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/img/icons/man02.svg" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/img/icons/soundOffIcon.svg" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/img/icons/soundOnIcon.svg" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/img/icons/t-ShirtIcon.svg" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/img/icons/winnerIcon.svg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/catch-the-google.iml" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" afterDir="false" />
++    <list default="true" id="c95fea79-73b1-4b27-9377-7c24a90e0339" name="Changes" comment="add Settings">
++      <change afterPath="$PROJECT_DIR$/ui/Win/Decoration/Icon/WinIcon.component.js" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/ui/Win/Elements/Results/Catch/Catch.component.js" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/ui/Win/Elements/Results/Catch/Result/ResultCatch.component.js" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/ui/Win/Elements/Results/Catch/Title/Title.component.js" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/ui/Win/Elements/Results/Miss/Miss.component.js" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/ui/Win/Elements/Results/Miss/Result/ResultMiss.component.js" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/ui/Win/Elements/Results/Miss/Title/Title.component.js" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/data/constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/data/constants.js" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/data/settings.js" beforeDir="false" afterPath="$PROJECT_DIR$/data/settings.js" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/css/style.css" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/data/state-manager.js" beforeDir="false" afterPath="$PROJECT_DIR$/data/state-manager.js" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/ui/App.component.js" beforeDir="false" afterPath="$PROJECT_DIR$/ui/App.component.js" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/ui/Grid/Grid.component.js" beforeDir="false" afterPath="$PROJECT_DIR$/ui/Grid/Grid.component.js" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/ui/Lose/Lose.component.js" beforeDir="false" afterPath="$PROJECT_DIR$/ui/Lose/Lose.component.js" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/ui/ResultPanel/ResultPanel.component.js" beforeDir="false" afterPath="$PROJECT_DIR$/ui/ResultPanel/ResultPanel.component.js" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/ui/Settings/settings.component.js" beforeDir="false" afterPath="$PROJECT_DIR$/ui/Settings/Settings.component.js" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/ui/Settings/PlayGameButton/PlayGameButton.component.js" beforeDir="false" afterPath="$PROJECT_DIR$/ui/Settings/PlayGameButton/PlayGameButton.component.js" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/ui/Win/Win.component.js" beforeDir="false" afterPath="$PROJECT_DIR$/ui/Win/Win.component.js" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/ui/common/Buttons/playGame.button.js" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/ui/renderStartScreen.js" beforeDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+     <option name="LAST_RESOLUTION" value="IGNORE" />
++  </component>
++  <component name="FileTemplateManagerImpl">
++    <option name="RECENT_TEMPLATES">
++      <list>
++        <option value="JavaScript File" />
++      </list>
++    </option>
+   </component>
+   <component name="Git.Settings">
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+@@ -67,6 +62,7 @@
+   "keyToString": {
+     "RunOnceActivity.ShowReadmeOnStart": "true",
+     "git-widget-placeholder": "in-progress",
++    "last_opened_file_path": "I:/JS/catch-the-Google/ui/Win/Elements/Results",
+     "node.js.detected.package.eslint": "true",
+     "node.js.detected.package.tslint": "true",
+     "node.js.selected.package.eslint": "(autodetect)",
+@@ -75,6 +71,11 @@
+     "vue.rearranger.settings.migration": "true"
+   }
+ }]]></component>
++  <component name="RecentsManager">
++    <key name="CopyFile.RECENT_KEYS">
++      <recent name="I:\JS\catch-the-Google\ui\Win\Elements\Results" />
++    </key>
++  </component>
+   <component name="SharedIndexes">
+     <attachedChunks>
+       <set>
+@@ -90,11 +91,24 @@
+       <option name="number" value="Default" />
+       <option name="presentableId" value="Default" />
+       <updated>1719078103056</updated>
+-      <workItem from="1719078105796" duration="3061000" />
++      <workItem from="1719078105796" duration="13498000" />
+     </task>
++    <task id="LOCAL-00001" summary="add Settings">
++      <option name="closed" value="true" />
++      <created>1719081959365</created>
++      <option name="number" value="00001" />
++      <option name="presentableId" value="LOCAL-00001" />
++      <option name="project" value="LOCAL" />
++      <updated>1719081959365</updated>
++    </task>
++    <option name="localTasksCounter" value="2" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+     <option name="version" value="3" />
+   </component>
++  <component name="VcsManagerConfiguration">
++    <MESSAGE value="add Settings" />
++    <option name="LAST_COMMIT_MESSAGE" value="add Settings" />
++  </component>
+ </project>
+\ No newline at end of file
+Index: ui/Win/Decoration/Icon/WinIcon.component.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ui/Win/Decoration/Icon/WinIcon.component.js b/ui/Win/Decoration/Icon/WinIcon.component.js
+new file mode 100644
+--- /dev/null	(date 1719091177519)
++++ b/ui/Win/Decoration/Icon/WinIcon.component.js	(date 1719091177519)
+@@ -0,0 +1,6 @@
++export function WinIconComponent() {
++    const element = document.createElement('img');
++    element.setAttribute('src', "img/icons/winnerIcon.svg");
++
++    return element
++}
+\ No newline at end of file
+Index: index.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n    <title>Document</title>\r\n<!--    <style>-->\r\n<!--        td {-->\r\n<!--            border: 1px solid black;-->\r\n<!--            width: 50px;-->\r\n<!--            height: 50px;-->\r\n<!--        }-->\r\n<!--    </style>-->\r\n    <link rel=\"stylesheet\" href=\"css/style.css\">\r\n</head>\r\n<body>\r\n    <div id=\"root\"></div>\r\n    <script src=\"index.js\" type=\"module\"></script>\r\n\r\n<!-- <button id=\"btn\">click</button>\r\n<script>\r\n    document\r\n    .getElementById('btn')\r\n    .addEventListener('click', () => {});\r\n</script> -->\r\n</body>\r\n</html>\r\n\r\n<!--<div id=\"root\">-->\r\n<!--    <div>-->\r\n<!--        <div class=\"result-container\">-->\r\n<!--        catch: 0; miss: 11-->\r\n<!--        </div>-->\r\n<!--        <table class=\"table\">-->\r\n<!--            <tr>-->\r\n<!--                <td class=\"cell\">-->\r\n\r\n<!--                </td>-->\r\n<!--                <td class=\"cell\">-->\r\n\r\n<!--                </td>-->\r\n<!--                <td class=\"cell\">-->\r\n\r\n<!--                </td>-->\r\n<!--            </tr>-->\r\n<!--            <tr>-->\r\n<!--                <td class=\"cell\">-->\r\n\r\n<!--                </td>-->\r\n<!--                <td class=\"cell\">-->\r\n<!--                    <span>- G -</span>-->\r\n<!--                </td>-->\r\n<!--                <td class=\"cell\">-->\r\n\r\n<!--                </td>-->\r\n<!--            </tr>-->\r\n<!--            Grid will be here-->\r\n<!--        </table>-->\r\n<!--    </div>-->\r\n<!--</div>-->
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/index.html b/index.html
+--- a/index.html	(revision c280ef28ccc28500d7f3cedafac15a27b789b5b2)
++++ b/index.html	(date 1719082512859)
+@@ -4,13 +4,6 @@
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Document</title>
+-<!--    <style>-->
+-<!--        td {-->
+-<!--            border: 1px solid black;-->
+-<!--            width: 50px;-->
+-<!--            height: 50px;-->
+-<!--        }-->
+-<!--    </style>-->
+     <link rel="stylesheet" href="css/style.css">
+ </head>
+ <body>

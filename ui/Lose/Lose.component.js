@@ -1,24 +1,16 @@
-import { getPoints, playAgain } from "../../data/state-manager.js";
+import {ModalDecorationComponent} from "./modalDecoration/modalDecoration.component.js";
+import {ModalElements} from "./modalElements/modalElements.component.js";
 
 export function LoseComponent() {
     const element = document.createElement('div')
+    element.classList.add('modal');
 
-    const points = getPoints()
 
-    const titleElement = document.createElement('h1')
-    titleElement.append('you lose');
-    
-    element.append(titleElement);
 
-    element.append(`catch: ${points.catch}; miss: ${points.miss}`)
-
-    const playAgainButtonElement = document.createElement('button')
-    playAgainButtonElement.append('Play again');
-    playAgainButtonElement.addEventListener('click', () => {
-        playAgain();
-    });
-
-    element.append(playAgainButtonElement)
+    element.append(
+        ModalDecorationComponent(),
+        ModalElements(),
+    )
 
     return element;
 }
