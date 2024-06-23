@@ -1,4 +1,4 @@
-import {playAgain} from "../../../data/state-manager.js";
+import {playAgain} from "../../../../data/state-manager.js";
 
 export function PlayAgainButton() {
     const element = document.createElement('button');

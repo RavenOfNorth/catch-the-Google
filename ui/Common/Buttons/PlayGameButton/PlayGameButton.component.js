@@ -1,4 +1,4 @@
-import {startGame} from "../../../data/state-manager.js";
+import {startGame} from "../../../../data/state-manager.js";
 
 
 export function playGameButtonComponent() {

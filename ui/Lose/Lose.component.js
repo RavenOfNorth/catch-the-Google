@@ -1,5 +1,6 @@
-import {ModalDecorationComponent} from "./modalDecoration/modalDecoration.component.js";
-import {ModalElements} from "./modalElements/modalElements.component.js";
+import {DecorationRenderComponent} from "../Common/Decoration/Decoration.component.js";
+import {GAME_STATUSES} from "../../data/constants.js";
+import {ElementsRenderComponent} from "../Common/Elements/Elements.component.js";
 
 export function LoseComponent() {
     const element = document.createElement('div')
@@ -8,8 +9,8 @@ export function LoseComponent() {
 
 
     element.append(
-        ModalDecorationComponent(),
-        ModalElements(),
+        DecorationRenderComponent(GAME_STATUSES.LOSE),
+        ElementsRenderComponent(GAME_STATUSES.LOSE),
     )
 
     return element;
