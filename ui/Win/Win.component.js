@@ -1,13 +1,14 @@
-import {DecorationComponent} from "./Decoration/Decoration.component.js";
-import {ModalElements} from "./Elements/Elements.component.js";
+import {ElementsComponent} from "./Elements/Elements.component.js";
+import {DecorationRenderComponent} from "../Common/Decoration/Decoration.component.js";
+import {GAME_STATUSES} from "../../data/constants.js";
 
 export function WinComponent() {
     const element = document.createElement('div')
     element.classList.add('modal');
 
     element.append(
-        DecorationComponent(),
-        ModalElements(),
+        DecorationRenderComponent(GAME_STATUSES.WIN),
+        ElementsComponent(),
 
     );
 

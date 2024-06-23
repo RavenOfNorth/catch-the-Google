@@ -5,7 +5,7 @@ import { GridComponent } from "./Grid/Grid.component.js";
 import { ResultPanelComponent } from "./ResultPanel/ResultPanel.component.js";
 import {WinComponent} from "./Win/Win.component.js";
 import {SettingsComponent} from "./Settings/Settings.component.js";
-import {playGameButtonComponent} from "./Settings/PlayGameButton/PlayGameButton.component.js";
+import {playGameButtonComponent} from "./Common/Buttons/PlayGameButton/PlayGameButton.component.js";
 
 export function AppComponent() {
     const element = document.createElement('section');

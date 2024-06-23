@@ -45,3 +45,18 @@ export const SETTINGS = {
     }
 }
 
+
+// TODO: use it instead of the elements above
+
+export const RESULT = {
+    WINNER: {
+        TITLE: "You win!",
+        ICON: "img/icons/winnerIcon.svg",
+        MESSAGE: "You're awesome!",
+    },
+    LOSER: {
+        TITLE: "You lose!",
+        ICON: "img/icons/lossIcon.svg",
+        MESSAGE: "You'll be lucky next time",
+    }
+}
