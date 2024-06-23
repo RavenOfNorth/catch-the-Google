@@ -1,6 +1,6 @@
 import {DecorationRenderComponent} from "../Common/Decoration/Decoration.component.js";
-import {ElementsComponent} from "./Elements/Elements.component.js";
 import {GAME_STATUSES} from "../../data/constants.js";
+import {ElementsRenderComponent} from "../Common/Elements/Elements.component.js";
 
 export function LoseComponent() {
     const element = document.createElement('div')
@@ -10,7 +10,7 @@ export function LoseComponent() {
 
     element.append(
         DecorationRenderComponent(GAME_STATUSES.LOSE),
-        ElementsComponent(),
+        ElementsRenderComponent(GAME_STATUSES.LOSE),
     )
 
     return element;
